@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Page Title</title>
+<style>
+body {
+background-color: red;
+color: yellow;
+font-family: monospace;
+}
+</style>
+</head>
+<body>
+<h1>Json</h1>
+<button onclick="myFunction()">Click me</button><br>
+<input type="text" name="url" value="https://chaos.social/api/v1/instance" id="url"><br>
+<pre id="json">-</pre>
+<script>
+    function syntaxHighlight(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    });
+}
+    function myFunction() {
+        var url = document.getElementById('url').value;
+        console.log(url);
+        fetch(url).then(response => {
+  return response.json();
+}).then(data => {
+  document.getElementById('json').innerHTML = syntaxHighlight(data);
+}).catch(err => {
+  // Do something for an error here
+});
+        }
+</script>
+</body>
+</html>
