@@ -12,15 +12,21 @@ body {
     justify-content: space-between;
 }
 
-input#url {
-    font-size: 1em;
+input[type=text] {
     font-family: monospace;
+    font-size: 1em;
+}
+
+#url {
     height: 40px;
     width: 80%;
     padding-left: 10px;
+    overflow: scroll;
+    white-space: nowrap;
+    vertical-align: middle;
 }
 
-button {
+#button {
     font-size: 1.2em;
     font-family: monospace;
     font-weight: bold;
@@ -30,15 +36,106 @@ button {
     background-color: rgba(0, 0, 0, .3);
 }
 
-pre {
+#extend {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+.active, #extend:hover {
+  background-color: #555;
+}
+
+#extend:after {
+  content: '\002B';
+  color: white;
+  font-weight: bold;
+  float: right;
+  margin-left: 5px;
+}
+
+.active:after {
+  content: "\2212";
+}
+
+#advanced {
+  padding: 0px 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  background-color: #f1f1f1;
+}
+
+#advanced hr {
+    border-top: 1px solid #f1f1f1;
+}
+
+#menu {
     font-size: 0.75em;
-    margin-top: 20px;
+    display: flex;
+}
+
+#replacements_wrapper, #headers {
+    width: 50%;
+}
+
+.replacement, .header {
+    height: 2em;
+}
+
+#replacements {}
+
+.replacement .find, .replacement .replace {
+    width: 35%;
+}
+
+
+#headers {}
+.header select option {
+    font-family: monospace!important;
+}
+.header input {}
+
+#request_status {
+    float: right;
+    font-size: 0.75em;
+    border: 1px solid black;
+    padding: 2px;
+    transform: translate(-10px, 0);
+    background-color: rgba(0, 0, 0, .2);
+}
+#request_url {
+    float: left;
+    
+    font-size: 0.75em;
+    
+    border: 1px solid black;
+    padding: 2px;
+    transform: translate(10px, 0);
+    background-color: rgba(0, 0, 0, .2);
+}
+
+#request_json {
+    font-size: 0.75em;
+    
     background-color: rgba(0, 0, 0, .1);
-    white-space: pre-wrap;
     outline: 2px dotted rgb(204, 204, 204);
+    
     padding: 5px;
+    margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
+
+    padding-top: 40px;
+
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
 }
 
 .key {
@@ -69,7 +166,8 @@ pre {
 
 .ripple {
     left: 50%;
-    margin-left: -55px;
+    margin-left: -160px;
+    margin-top: 20px;
     display: inline-block;
     position: relative;
     width: 80px;

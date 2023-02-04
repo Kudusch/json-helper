@@ -7,41 +7,82 @@
     <script type="text/javascript" src="main.js"></script>
 </head>
 <body>
-<h1><a href="/projects/json">Json</a></h1>
+<h1><a href=".">Json</a></h1>
 <div class="control">
-    <input type="text" name="url" value="https://chaos.social/api/v1/instance" id="url">
-    <button onclick="get_json()">Get JSON</button>
+    <input type="text" name="url" value="https://instances.social/api/1.0/instances/list?count=5" id="url">
+    <button onclick="get_json()" id="button">Get JSON</button>
+</div>
+<button id="extend" onclick="extend_menu()">Advanced Settings</button>
+<div id="advanced">
+    <hr>
+    <div id="menu">
+        <div id="headers">
+            <div class="header">
+                <select id="header_key">
+                    <option>None</option>
+                    <option selected>Authorization</option>
+                </select>
+                <input type="text" id="header_value" name="header" value="Bearer vmFkQSnfNXM85XFQBLLMOHQla2V5RtusGmqL2EPMwKlakeI5ZL1OtkMWpgVaXFnMPzB6G4C0QtanWPtP6vVYj1bwQ1ZHXQM8cYmtcAJVQku72AomhKyFcQ2sErYusTQ4">
+            </div>
+            <!-- <div class="header">
+                <select id="header_key">
+                    <option selected>None</option>
+                    <option>Authorization</option>
+                </select>
+                <input type="text" id="header_value" name="header" value="">
+            </div> -->
+        </div>
+        <div id="replacements_wrapper">
+            <div id="replacements">
+            <div class="replacement">
+                <lable>s/</lable>
+                <input name="find" class="find" type="text"></input>
+                <label>/</label>
+                <input name="replace" class="replace" type="text"></input>
+                <label>/r</label>
+            </div>
+            </div>
+            <button onclick="add_replacement()">+</button>
+        </div>
+    </div>
+    <hr>
 </div>
 <div id="error"></div>
-<pre id="json">
-    <div id="wait" class="ripple hidden"><div></div><div></div></div>
-</pre>
+<div id="respone">
+    <div id="request_status" class="hidden">xxx</div>
+    <div id="request_url"></div>
+    <pre id="request_json">
+        <div id="wait" class="ripple hidden"><div></div><div></div></div>
+    </pre>
+</div>
 <script>
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    for(var k of urlParams.keys()) {
-        if (k == "url") {
-            document.getElementById('url').value = urlParams.get("url");
+    document.getElementById("url").addEventListener("keydown", function (e) {
+        if (e.code === "Enter") {
+            get_json();
         }
-    }
-    const request_headers = new Headers();
-    function get_json() {
-        removeClass(document.getElementById('wait'), "hidden");
-        var url = document.getElementById('url').value;
-        fetch(
-            url,
-            {
-                method: "GET",
-                headers: request_headers,
+    });
+    document.getElementById("url").addEventListener("keyup", function (e) {
+        var input_url = document.getElementById('url');
+        var request_url = document.getElementById('request_url');
+        request_url.innerHTML = input_url.value;
+    });
+    document.getElementById('url').value = get_url();
+    document.getElementById('request_url').innerHTML = document.getElementById('url').value;
+
+    document.querySelectorAll(".replacement input").forEach(function(elem) {
+        var replacements = document.getElementById("replacements").getElementsByTagName("div");
+        elem.addEventListener("keyup", function (e) {
+        for (var i = replacements.length - 1; i >= 0; i--) {
+            find = replacements[i].querySelector(".find").value;
+            replace = replacements[i].querySelector(".replace").value;
+            if (find.length >= 2) {
+                do_replacement(find, replace);
             }
-        ).then(response => {
-            return response.json();
-        }).then(data => {
-            document.getElementById('json').innerHTML = syntaxHighlight(data);
-        }).catch(err => {
-            document.getElementById('error').innerHTML = err;
+        }
         });
-    }
+    });
+
+    extend_menu();
 </script>
 </body>
 </html>
