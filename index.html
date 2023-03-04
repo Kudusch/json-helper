@@ -15,43 +15,17 @@
 <button id="extend" onclick="extend_menu()">Advanced Settings</button>
 <div id="advanced">
     <hr>
-    <div id="menu">
-        <div id="headers">
-            <div class="header">
-                <select id="header_key">
-                    <option>None</option>
-                    <option selected>Authorization</option>
-                </select>
-                <input type="text" id="header_value" name="header" value="Bearer vmFkQSnfNXM85XFQBLLMOHQla2V5RtusGmqL2EPMwKlakeI5ZL1OtkMWpgVaXFnMPzB6G4C0QtanWPtP6vVYj1bwQ1ZHXQM8cYmtcAJVQku72AomhKyFcQ2sErYusTQ4">
-            </div>
-            <!-- <div class="header">
-                <select id="header_key">
-                    <option selected>None</option>
-                    <option>Authorization</option>
-                </select>
-                <input type="text" id="header_value" name="header" value="">
-            </div> -->
-        </div>
-        <div id="replacements_wrapper">
-            <div id="replacements">
-            <div class="replacement">
-                <lable>s/</lable>
-                <input name="find" class="find" type="text"></input>
-                <label>/</label>
-                <input name="replace" class="replace" type="text"></input>
-                <label>/r</label>
-            </div>
-            </div>
-            <button onclick="add_replacement()">+</button>
-        </div>
-    </div>
+    <select id="header_key">
+        <option>None</option>
+        <option selected>Authorization</option>
+    </select>
+    <input type="text" id="header_value" name="header" value="">
     <hr>
 </div>
 <div id="error"></div>
 <div id="respone">
-    <div id="request_status" class="hidden">xxx</div>
-    <div id="request_url"></div>
-    <pre id="request_json">
+    <div id="status" class="hidden">xxx</div>
+    <pre id="json">
         <div id="wait" class="ripple hidden"><div></div><div></div></div>
     </pre>
 </div>
@@ -61,28 +35,56 @@
             get_json();
         }
     });
-    document.getElementById("url").addEventListener("keyup", function (e) {
-        var input_url = document.getElementById('url');
-        var request_url = document.getElementById('request_url');
-        request_url.innerHTML = input_url.value;
-    });
     document.getElementById('url').value = get_url();
-    document.getElementById('request_url').innerHTML = document.getElementById('url').value;
 
-    document.querySelectorAll(".replacement input").forEach(function(elem) {
-        var replacements = document.getElementById("replacements").getElementsByTagName("div");
-        elem.addEventListener("keyup", function (e) {
-        for (var i = replacements.length - 1; i >= 0; i--) {
-            find = replacements[i].querySelector(".find").value;
-            replace = replacements[i].querySelector(".replace").value;
-            if (find.length >= 2) {
-                do_replacement(find, replace);
+    function get_json() {
+
+        // make headers
+        const request_headers = new Headers();
+        var header_select = document.getElementById('header_key');
+        header_key = header_select.options[header_select.selectedIndex].text;
+        header_value = document.getElementById('header_value').value.trim();
+        request_headers.append(header_key, header_value);
+        console.log(header_key);
+        console.log(header_value);
+        
+        // timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        
+        removeClass(document.getElementById('wait'), "hidden");
+        var url = document.getElementById('url').value;
+        fetch(
+            url,
+            {
+                method: "GET",
+                headers: request_headers,
+                signal: controller.signal,
             }
-        }
+        ).then(response => {
+            document.getElementById('status').innerHTML = response.status;
+            return response.json();
+        }).then(data => {
+            addClass(document.getElementById('wait'), "hidden");
+            removeClass(document.getElementById('status'), "hidden");
+            document.getElementById('json').innerHTML = syntaxHighlight(data);
+            document.getElementById('json').innerHTML = "<div id='wait' class='ripple hidden'><div></div><div></div></div>" + document.getElementById('json').innerHTML;
+        }).catch(err => {
+            document.getElementById('error').innerHTML = err;
+            addClass(document.getElementById('wait'), "hidden");
         });
-    });
+    }
 
-    extend_menu();
+    function extend_menu() {
+        var button = document.getElementById("extend");
+        button.classList.toggle("active");
+        var content = button.nextElementSibling;
+        if (content.style.maxHeight){
+          content.style.maxHeight = null;
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+        } 
+    }
 </script>
 </body>
 </html>

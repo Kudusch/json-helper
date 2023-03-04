@@ -12,12 +12,9 @@ body {
     justify-content: space-between;
 }
 
-input[type=text] {
-    font-family: monospace;
-    font-size: 1em;
-}
-
 #url {
+    font-size: 1em;
+    font-family: monospace;
     height: 40px;
     width: 80%;
     padding-left: 10px;
@@ -65,7 +62,7 @@ input[type=text] {
 }
 
 #advanced {
-  padding: 0px 18px;
+  padding: 0 18px;
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
@@ -76,52 +73,15 @@ input[type=text] {
     border-top: 1px solid #f1f1f1;
 }
 
-#menu {
-    font-size: 0.75em;
-    display: flex;
-}
-
-#replacements_wrapper, #headers {
-    width: 50%;
-}
-
-.replacement, .header {
-    height: 2em;
-}
-
-#replacements {}
-
-.replacement .find, .replacement .replace {
-    width: 35%;
-}
-
-
-#headers {}
-.header select option {
-    font-family: monospace!important;
-}
-.header input {}
-
-#request_status {
+#status {
     float: right;
-    font-size: 0.75em;
     border: 1px solid black;
     padding: 2px;
     transform: translate(-10px, 0);
     background-color: rgba(0, 0, 0, .2);
 }
-#request_url {
-    float: left;
-    
-    font-size: 0.75em;
-    
-    border: 1px solid black;
-    padding: 2px;
-    transform: translate(10px, 0);
-    background-color: rgba(0, 0, 0, .2);
-}
 
-#request_json {
+pre {
     font-size: 0.75em;
     
     background-color: rgba(0, 0, 0, .1);
@@ -131,8 +91,6 @@ input[type=text] {
     margin-top: 20px;
     margin-left: 10px;
     margin-right: 10px;
-
-    padding-top: 40px;
 
     white-space: pre-wrap;
     overflow-wrap: break-word;
